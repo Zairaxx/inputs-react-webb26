@@ -1,25 +1,29 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import TodoList from './components/TodoList';
+import AddTodoForm from './components/AddTodoForm';
 
 function App() {
-  const [students,setStudents] = useState([]);
-  const [namn,setNamn] = useState("");
+  //Alla våra todos
+  const [todos, setTodos] = useState([]);
 
-  function addStudent(){
-    setStudents([...students, namn]);
-  }
+  const addTodo = (title,description) => {
+    const newTodo = { id: Date.now(), title, description, completed: false };
+    setTodos([...todos, newTodo]);
+    setTitle("");
+    setDescription("");
+  };
+  const toggleTodo = (id) => {
+    setTodos(todos.map((todo) =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
 
   return (
-    <>
-      <h1>Elevlista</h1>
-      <h2>Ny elev: {namn}</h2>
-      <input type="text" onChange={(e) => setNamn(e.target.value)}/>
-      <button onClick={addStudent}>Lägg till elev</button>
-
-      {/* W ? T : F */}
-      {students.length > 0 ? <ul>{students.map(student => <li>{student}</li>)}</ul> : <p>Listan är tom!</p>}
-    </>
-  )
+    <main>
+      <AddTodoForm addTodo={addTodo} />
+      <TodoList todos={todos} toggleTodo={toggleTodo}/>
+    </main>
+  );
 }
 
-export default App
+export default App;
